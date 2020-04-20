@@ -97,8 +97,13 @@ RCT_EXPORT_METHOD(unsetAccount:(NSString *)text)
 + (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
 
     NSDictionary * userInfo = notification.request.content.userInfo;
+    NSString *version = [UIDevice currentDevice].systemVersion;
     if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
-        [RCTPushNotificationManager didReceiveRemoteNotification:userInfo]; 
+      if (version.doubleValue >= 10.0) {
+        completionHandler(UNNotificationPresentationOptionAlert);
+      } else{
+        [RCTPushNotificationManager didReceiveRemoteNotification:userInfo];
+      }
     }
 }
 
